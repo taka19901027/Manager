@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/jdbc
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<context:component-scan base-package="jp.co.techtone.nsm.entity, jp.co.techtone.nsm.controller,
+         									jp.co.techtone.nsm.DAO, jp.co.techtone.nsm.form" />
+
+	<context:property-placeholder location="classpath:*.properties"/>
+
+	<context:annotation-config />
+
+	<bean id="applicationProperties"
+    	class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    	<property name="locations">
+        	<list>
+            	<value>classpath:LoginMenu.properties</value>
+            	<value>classpath:PriceSearch.properties</value>
+            	<value>classpath:TopMenu.properties</value>
+            	<value>classpath:AverageSearchTop.properties</value>
+            	<value>classpath:PriceInsert.properties</value>
+            	<value>classpath:DateExport.properties</value>
+            	<value>classpath:Exception.properties</value>
+            	<value>classpath:Logout.properties</value>
+        	</list>
+    	</property>
+	</bean>
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+	    <property name="driverClassName" value="${jdbc.driverClassName}" />
+	    <property name="url" value="${jdbc.url}" />
+	    <property name="username" value="${jdbc.username}" />
+	    <property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- jdbc -->
+	<bean class="org.springframework.jdbc.core.JdbcTemplate">
+	    <constructor-arg ref="dataSource" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="persistence-unit" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="database" value="MYSQL" />
+				<property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect" />
+			</bean>
+		</property>
+	</bean>
+
+</beans>
